@@ -5,7 +5,10 @@ import { CONTRACT_ADDRESS } from "./config";
 export const getContract = async () => {
   if (!window.ethereum) throw new Error("MetaMask not detected");
 
-  const provider = new BrowserProvider(window.ethereum); // ✅ correct for ethers v6
-  const signer = await provider.getSigner();             // ✅ now async
+  // First request account access from MetaMask
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
+  
+  const provider = new BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
   return new Contract(CONTRACT_ADDRESS, DeNews.abi, signer);
 };
